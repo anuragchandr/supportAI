@@ -1,28 +1,143 @@
-generator client{
-    provider = "prisma-client-js",
+generator client {
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum DocumentStatus {
+  PENDING
+  PROCESSED
+  FAILED
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
 }
 
 model User {
-    id        Int      @id @default(autoincrement())
-    email     String   @unique
-    name      String
-    role      String   @default("USER")
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(USER)
 
-    // Indexes
-    @@index([email], name: "idx_user_email")
+  business     Business?
 
-    //map
-    @@map("users")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("users")
 }
 
-enum Role{
-    ADMIN
-    USER
+model Business {
+  id         String   @id @default(cuid())
+  name       String
+  websiteUrl String?
+
+  ownerId    String   @unique
+  owner      User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  documents     Document[]
+  conversations Conversation[]
+  leads         Lead[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("businesses")
+}
+
+model Document {
+  id         String         @id @default(cuid())
+  title      String
+  content    String         @db.Text
+  sourceType String         @default("text")
+  sourceUrl  String?
+  status     DocumentStatus @default(PENDING)
+
+  businessId String
+  business   Business       @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  chunks     DocumentChunk[]
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([businessId])
+  @@map("documents")
+}
+
+model DocumentChunk {
+  id         String   @id @default(cuid())
+  content    String   @db.Text
+  chunkIndex Int
+
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime @default(now())
+
+  @@unique([documentId, chunkIndex])
+  @@map("document_chunks")
+}
+
+model Conversation {
+  id         String   @id @default(cuid())
+  visitorId  String?
+
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  messages   Message[]
+  leads      Lead[]
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([businessId, createdAt])
+  @@map("conversations")
+}
+
+model Message {
+  id             String      @id @default(cuid())
+  role           MessageRole
+  content        String      @db.Text
+
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  createdAt      DateTime @default(now())
+
+  @@index([conversationId, createdAt])
+  @@map("messages")
+}
+
+model Lead {
+  id             String   @id @default(cuid())
+  name           String?
+  email          String?
+  phone          String?
+  message        String?  @db.Text
+  source         String   @default("website_widget")
+
+  businessId     String
+  business       Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  conversationId String?
+  conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+
+  createdAt      DateTime @default(now())
+
+  @@index([businessId, createdAt])
+  @@map("leads")
 }
