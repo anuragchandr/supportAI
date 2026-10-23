@@ -1,0 +1,25 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16-bookworm
+    container_name: supportai-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: supportai
+      POSTGRES_PASSWORD: supportai_local_password
+      POSTGRES_DB: supportai
+
+    ports:
+      - "5433:5432"
+
+    volumes:
+      - supportai_postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U supportai -d supportai"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  supportai_postgres_data:
