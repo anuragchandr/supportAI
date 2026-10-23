@@ -1,3 +1,4 @@
+
 const CHAT_MODEL = "@cf/google/gemma-4-26b-a4b-it";
 
 type ChatMessage = {
@@ -7,9 +8,16 @@ type ChatMessage = {
 
 type CloudflareChatResponse = {
   success?: boolean;
-  errors?: Array<{ message?: string }>;
+  errors?: Array<{
+    message?: string;
+  }>;
   result?: {
     response?: string;
+    choices?: Array<{
+      message?: {
+        content?: string | Array<{ text?: string }>;
+      };
+    }>;
   };
 };
 
@@ -25,11 +33,11 @@ export async function generateSupportAnswer(
     );
   }
 
-  const url =
+  const endpoint =
     `https://api.cloudflare.com/client/v4/accounts/` +
     `${accountId}/ai/run/${CHAT_MODEL}`;
 
-  const response = await fetch(url, {
+  const response = await fetch(endpoint, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${apiToken}`,
@@ -44,13 +52,13 @@ export async function generateSupportAnswer(
     signal: AbortSignal.timeout(45_000),
   });
 
-  const result =
+  const payload =
     (await response.json().catch(() => null)) as
       | CloudflareChatResponse
       | null;
 
-  if (!response.ok || !result?.success) {
-    const details = result?.errors
+  if (!response.ok || !payload || payload.success === false) {
+    const details = payload?.errors
       ?.map((item) => item.message)
       .filter(Boolean)
       .join("; ");
@@ -61,11 +69,28 @@ export async function generateSupportAnswer(
     );
   }
 
-  const answer = result.result?.response?.trim();
+  // Support the traditional Workers AI result format.
+  const directAnswer = payload.result?.response;
+
+  // Also support the Chat Completions response format.
+  const messageContent =
+    payload.result?.choices?.[0]?.message?.content;
+
+  const choiceAnswer =
+    typeof messageContent === "string"
+      ? messageContent
+      : Array.isArray(messageContent)
+        ? messageContent
+            .map((part) => part.text ?? "")
+            .join("\n")
+        : "";
+
+  const answer = (directAnswer || choiceAnswer).trim();
 
   if (!answer) {
+    // Do not log the complete payload, which may contain business data.
     throw new Error(
-      "Cloudflare returned an empty assistant response."
+      "Cloudflare returned no usable assistant text."
     );
   }
 
