@@ -63,13 +63,13 @@ export default async function DashboardPage() {
       label: "Conversations",
       value: conversationCount,
       description: "Customer chat sessions",
-      href: "#conversations",
+      href: "/dashboard/conversations",
     },
     {
       label: "Captured leads",
       value: leadCount,
       description: "Potential customers from your widget",
-      href: "#leads",
+      href: "/dashboard/leads",
     },
   ];
 
@@ -112,18 +112,18 @@ export default async function DashboardPage() {
               >
                 Knowledge base
               </Link>
-              <a
-                href="#conversations"
-                className="block rounded-lg px-3 py-2.5 text-sm text-zinc-600 hover:bg-zinc-100"
-              >
-                Conversations
-              </a>
-              <a
-                href="#leads"
-                className="block rounded-lg px-3 py-2.5 text-sm text-zinc-600 hover:bg-zinc-100"
-              >
-                Leads
-              </a>
+              <Link
+  href="/dashboard/conversations"
+  className="block rounded-lg px-3 py-2.5 text-sm text-zinc-600 hover:bg-zinc-100"
+>
+  Conversations
+</Link>
+              <Link
+  href="/dashboard/leads"
+  className="block rounded-lg px-3 py-2.5 text-sm text-zinc-600 hover:bg-zinc-100"
+>
+  Leads
+</Link>
             </nav>
           </div>
 
@@ -247,6 +247,12 @@ export default async function DashboardPage() {
               </p>
               <p className="mt-5 text-2xl font-semibold">{conversationCount}</p>
               <p className="mt-1 text-xs text-zinc-500">Total conversations</p>
+              <Link
+  href="/dashboard/conversations"
+  className="mt-4 inline-flex text-sm font-medium text-zinc-700 hover:text-zinc-950"
+>
+  View all conversations →
+</Link>
             </section>
 
             <section
@@ -263,6 +269,12 @@ export default async function DashboardPage() {
                 <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs text-zinc-600">
                   {leadCount} total
                 </span>
+                <Link
+  href="/dashboard/leads"
+  className="text-sm font-medium text-zinc-700 hover:text-zinc-950"
+>
+  View all leads →
+</Link>
               </div>
 
               {recentLeads.length === 0 ? (
