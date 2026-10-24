@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 
+import { connection } from "next/server";
+
 const PAGE_SIZE = 20;
 
 type PageProps = {
@@ -36,7 +38,11 @@ function pageHref(page: number, query: string) {
 export default async function ConversationsPage({
   searchParams,
 }: PageProps) {
+  await connection();
+
   const user = await getCurrentUser();
+
+  // Keep the rest of your existing page unchanged.
 
   if (!user) redirect("/login");
 

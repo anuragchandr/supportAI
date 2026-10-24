@@ -5,6 +5,8 @@ import { notFound, redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 
+import { connection } from "next/server";
+
 type PageProps = {
   params: Promise<{
     conversationId: string;
@@ -24,7 +26,11 @@ function formatDate(date: Date) {
 export default async function ConversationDetailPage({
   params,
 }: PageProps) {
+  await connection();
+
   const user = await getCurrentUser();
+
+  // Keep the rest of your existing page unchanged.
 
   if (!user) redirect("/login");
 
@@ -33,6 +39,7 @@ export default async function ConversationDetailPage({
   if (!business) notFound();
 
   const { conversationId } = await params;
+  console.log("[Conversation detail route] Reached");
 
   if (!conversationId || conversationId.length > 100) {
     notFound();
@@ -65,7 +72,10 @@ export default async function ConversationDetailPage({
       },
     },
   });
-
+console.log("[Conversation lookup]", {
+  found: Boolean(conversation),
+  businessConfigured: Boolean(business),
+});
   if (!conversation) notFound();
 
   // The query fetches the latest messages first. Display them
