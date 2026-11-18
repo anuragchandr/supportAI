@@ -385,7 +385,11 @@ export async function POST(request: Request) {
           data: { updatedAt: new Date() },
         });
 
-        return currentId;
+                return currentId;
+      },
+      {
+        maxWait: 10000,
+        timeout: 15000,
       }
     );
 
