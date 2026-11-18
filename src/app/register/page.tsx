@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 
 import { getCurrentUser } from "@/lib/auth";
 import RegisterForm from "./register-form";
-
+export const instant = false;
 export default async function RegisterPage() {
   await connection();
 

@@ -1,11 +1,13 @@
 
+
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { connection } from "next/server";
 
 import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 
-import { connection } from "next/server";
+export const instant = false;
 
 type PageProps = {
   params: Promise<{

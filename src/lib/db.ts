@@ -1,11 +1,12 @@
+
 import { PrismaClient } from "@prisma/client";
 
 const globalForPrisma = globalThis as unknown as {
-  supportAiPrisma: PrismaClient | undefined;
+  prisma: PrismaClient | undefined;
 };
 
 export const db =
-  globalForPrisma.supportAiPrisma ??
+  globalForPrisma.prisma ??
   new PrismaClient({
     log:
       process.env.NODE_ENV === "development"
@@ -14,5 +15,5 @@ export const db =
   });
 
 if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.supportAiPrisma = db;
+  globalForPrisma.prisma = db;
 }

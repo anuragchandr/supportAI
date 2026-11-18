@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { NextResponse } from "next/server";
 
 import { getCurrentUser } from "@/lib/auth";
@@ -6,6 +7,7 @@ import { db } from "@/lib/db";
 export const instant = false;
 
 export async function GET() {
+  await connection();
   try {
     const user = await getCurrentUser();
 
@@ -38,6 +40,7 @@ export async function GET() {
     return NextResponse.json({ users });
   } catch (error) {
     console.error("List users error:", error);
+
     return NextResponse.json(
       { error: "Unable to load users." },
       { status: 500 }

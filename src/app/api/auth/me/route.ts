@@ -1,10 +1,11 @@
+import { connection } from "next/server";
 import { NextResponse } from "next/server";
-
 import { getCurrentUser } from "@/lib/auth";
 
 export const instant = false;
 
 export async function GET() {
+  await connection();
   try {
     const user = await getCurrentUser();
 
@@ -17,10 +18,10 @@ export async function GET() {
 
     return NextResponse.json({ user });
   } catch (error) {
-    console.error("Current-user error:", error);
+    console.error("Get current user error:", error);
 
     return NextResponse.json(
-      { error: "Could not retrieve the current user." },
+      { error: "Unable to get current user." },
       { status: 500 }
     );
   }

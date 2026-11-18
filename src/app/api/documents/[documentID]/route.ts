@@ -1,5 +1,5 @@
-import { NextResponse, NextRequest } from "next/server";
 
+import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 
@@ -8,7 +8,7 @@ type RouteContext = {
 };
 
 export async function DELETE(
-  _request: NextRequest,
+  _request: Request,
   context: RouteContext
 ) {
   try {
@@ -21,14 +21,22 @@ export async function DELETE(
       );
     }
 
+    // Check whether the user has an associated business
     if (!user.business) {
       return NextResponse.json(
-        { error: "No business workspace is linked to this account." },
-        { status: 409 }
+        { error: "Business account not found." },
+        { status: 403 }
       );
     }
 
     const { documentID } = await context.params;
+
+    if (!documentID) {
+      return NextResponse.json(
+        { error: "Document ID is required." },
+        { status: 400 }
+      );
+    }
 
     const result = await db.document.deleteMany({
       where: {
@@ -45,6 +53,7 @@ export async function DELETE(
     }
 
     return NextResponse.json({
+      success: true,
       message: "Document deleted successfully.",
     });
   } catch (error) {

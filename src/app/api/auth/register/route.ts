@@ -6,6 +6,8 @@ import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
 
+export const instant = false;
+
 export async function POST(request: Request) {
   try {
     // 1. Read and validate the request body.
