@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -6,6 +5,8 @@ import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 
 import { connection } from "next/server";
+
+export const instant = false;
 
 const PAGE_SIZE = 20;
 

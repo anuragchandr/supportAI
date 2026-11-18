@@ -1,11 +1,16 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 
 import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import LogoutButton from "./logout-button";
 
+export const instant = false;
+
 export default async function DashboardPage() {
+  await connection();
+
   const user = await getCurrentUser();
 
   if (!user) {

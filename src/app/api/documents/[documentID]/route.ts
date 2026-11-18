@@ -1,14 +1,14 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
 import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 
 type RouteContext = {
-  params: Promise<{ documentId: string }>;
+  params: Promise<{ documentID: string }>;
 };
 
 export async function DELETE(
-  _request: Request,
+  _request: NextRequest,
   context: RouteContext
 ) {
   try {
@@ -28,11 +28,11 @@ export async function DELETE(
       );
     }
 
-    const { documentId } = await context.params;
+    const { documentID } = await context.params;
 
     const result = await db.document.deleteMany({
       where: {
-        id: documentId,
+        id: documentID,
         businessId: user.business.id,
       },
     });

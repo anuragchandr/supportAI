@@ -1,10 +1,15 @@
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import LoginForm from "./login-form";
 
 import Link from "next/link";
 
+export const instant = false;
+
 export default async function LoginPage() {
+  await connection();
+
   const user = await getCurrentUser();
 
   if (user) {
@@ -29,14 +34,14 @@ export default async function LoginPage() {
         <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
           <LoginForm />
           <p className="mt-5 text-center text-sm text-zinc-600">
-  New to SupportAI?{" "}
-  <Link
-    href="/register"
-    className="font-semibold text-zinc-950 underline underline-offset-4"
-  >
-    Create an account
-  </Link>
-</p>
+            New to SupportAI?{" "}
+            <Link
+              href="/register"
+              className="font-semibold text-zinc-950 underline underline-offset-4"
+            >
+              Create an account
+            </Link>
+          </p>
         </div>
 
         <p className="mt-6 text-center text-xs text-zinc-400">

@@ -51,7 +51,6 @@ export async function GET() {
   }
 }
 
-
 export async function POST(request: Request) {
   let documentId: string | undefined;
   let businessId: string | undefined;
@@ -73,7 +72,8 @@ export async function POST(request: Request) {
       );
     }
 
-    businessId = user.business.id;
+    const workspaceId = user.business.id;
+    businessId = workspaceId;
 
     const body: unknown = await request.json().catch(() => null);
 
@@ -119,7 +119,7 @@ export async function POST(request: Request) {
         content,
         sourceType: "text",
         status: "PENDING",
-        businessId,
+        businessId: workspaceId,
       },
       select: {
         id: true,
@@ -133,7 +133,7 @@ export async function POST(request: Request) {
 
     const ingestion = await ingestDocument(
       document.id,
-      businessId,
+      workspaceId,
       content
     );
 

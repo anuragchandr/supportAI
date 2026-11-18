@@ -1,9 +1,11 @@
-
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 
 import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
+
+export const instant = false;
 
 const PAGE_SIZE = 25;
 
@@ -36,6 +38,8 @@ function pageHref(page: number, query: string) {
 export default async function LeadsPage({
   searchParams,
 }: LeadsPageProps) {
+  await connection();
+
   const user = await getCurrentUser();
 
   if (!user) {
