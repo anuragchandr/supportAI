@@ -2,6 +2,17 @@
 
 **Knowledge-based customer support for business websites.**
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Visit_SupportAI-5B21B6?style=for-the-badge&logo=vercel&logoColor=white)](https://support-dhzlq2ogi-anuragchandrs-projects.vercel.app/)
+
+[![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=20232A)](https://react.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
+[![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)](https://www.cloudflare.com/)
+
 SupportAI is a full-stack SaaS-style application that lets a business create a workspace, add its own knowledge documents, embed a support chat widget on its website, review saved conversations, and view contact details submitted through the widget.
 
 > **Project status:** Active development. The core application flows are implemented, but the project should be treated as pre-production until deployment configuration, security review, abuse controls, and automated tests are complete.
